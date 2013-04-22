@@ -22,19 +22,24 @@ Function.method('curry', function() {
 });
 
 
+
+
 $('#strut').html('<canvas id="canvas" width="' + $('#strut').parent().width() + 
     '" height="' + $('#strut').parent().height() + '"></canvas>');
 
-var CTX = $('#canvas')[0].getContext("2d");
+var $CANVAS = $('#canvas');
+var CTX = $CANVAS[0].getContext("2d");
 var TWOPI = Math.PI * 2;
-var WIDTH = $('#canvas').width();
-var HEIGHT = $('#canvas').height();
+var WIDTH = $CANVAS.width();
+var HEIGHT = $CANVAS.height();
 var COLOR = {
     YELLOW: 'rgba(255, 255, 0, .7)',
     BLUE: 'rgba(31, 48, 240, 0.7)',
     RED: 'rgba(233, 15, 15, 0.74)',
     BLACK: 'rgb(0, 0, 0)'
 };
+
+var isMouseDown = false;
 
 var draw_circle = function (config) {
     CTX.fillStyle = config.color || COLOR.BLUE;
@@ -63,24 +68,9 @@ var draw_line = function (config) {
     CTX.stroke();
 };
 
-draw_circle({
-    size: 25,
-    position: {x: 300, y: 400},
-    color: COLOR.YELLOW
-});
 
-draw_disc({
-    size: 15,
-    width: 2,
-    position: {x: 400, y: 500},
-    color: COLOR.RED
-});
 
-draw_line({
-    width: 3,
-    begin: {x: 10, y: 20},
-    end: {x: 30, y: 50}
-});
+
 
 
 
@@ -98,7 +88,7 @@ var new_node = function (fig) {
     var that = new_object(fig);
 
     that.size = fig.size || 15;
-
+    that.weight = fig.weight || 10;
     if(fig.type) {
         that.type = fig.type.toLowerCase();
     }
@@ -151,9 +141,6 @@ var new_link = function (fig) {
     return that;
 };
 
-
-
-
 //composites are networks of links and nodes.
 var composite = {
 
@@ -161,13 +148,56 @@ var composite = {
 
 
 
-var node = new_node({
-    position: {x: 445, y: 445},
-    size: 50,
-    color: COLOR.RED,
-    type: "solid"
+
+
+
+
+
+//get mouse position, cross browser compatability
+function cursor_position(e) {
+    //this section is from http://www.quirksmode.org/js/events_properties.html
+    var targ, x, y;
+
+    if (!e) {
+        e = window.event;
+    }
+    if (e.target) {
+        targ = e.target;
+    }
+    else if (e.srcElement) {
+        targ = e.srcElement;
+    }
+    if (targ.nodeType == 3) {
+        targ = targ.parentNode;
+    }
+
+    x = Math.floor(e.pageX - $(targ).offset().left);
+    y = Math.floor(e.pageY - $(targ).offset().top);
+
+    return {x: x, y: y};
+};
+
+//Controller Bindings.
+
+// start the generation of a new ball where the user clicked.
+$CANVAS.mousedown(function (e) {
+    isMouseDown = true;
+    alert("mousedown");
 });
-node.draw();
+
+//stop the generation of the ball created on mousedown.
+//add this new ball to the universe.
+$CANVAS.mouseup(function (e) {
+    isMouseDown = false;
+    alert("mouseup");
+});
+
+$CANVAS.mousemove(function (e) {
+    $('#cursor').html(JSON.stringify(cursor_position(e)));
+});
+
+
+
 
 
 
