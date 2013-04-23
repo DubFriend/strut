@@ -1,30 +1,37 @@
 <html>
-	<head>
-		<title>Strut</title>
-		<style>
-			html, body {
-				background: grey;
-			}
-			#wrap {
-				width:100%;
-				height: 95%;
-				margin-left:  auto;
-				margin-right: auto;
-			}
-			#canvas {
-				background: rgb(27, 27, 27);
-			}
-		</style>
-	</head>
-	<body>
-		<div id="cursor"></div>
-		<div id="wrap">
-			<div id='strut'></div>
-			<button type="button" name="reset" id="reset">reset</button>
-		</div>
+<head>
+    <title>Strut</title>
+    <style>
+        html, body {
+            background-color: grey;
+        }
+        #wrap {
+            width:100%;
+            height: 95%;
+            margin-left:  auto;
+            margin-right: auto;
+        }
+        #canvas {
+            background-color: rgb(27, 27, 27);
+        }
+        #cursor {
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="wrap">
+        <div id='strut'></div>
+        <button type="button" name="reset" id="reset">reset</button>
+    </div>
 
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-		<script src="lib.js"></script>
-		<script src="execute.js"></script>
-	</body>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="lib.js"></script>
+    <script src="physics.js"></script>
+    <script src="render.js"></script>
+    <script src="object.js"></script>
+    <script src="control.js"></script>
+    <script src="execute.js"></script>
+</body>
 </html>

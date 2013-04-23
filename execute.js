@@ -1,24 +1,3 @@
-/*draw_circle({
-    size: 25,
-    position: {x: 300, y: 400},
-    color: COLOR.YELLOW
-});
-
-draw_disc({
-    size: 15,
-    width: 2,
-    position: {x: 400, y: 500},
-    color: COLOR.RED
-});
-
-draw_line({
-    width: 3,
-    begin: {x: 10, y: 20},
-    end: {x: 30, y: 50}
-});*/
-
-
-
 var nodeA = new_node({
     position: {x: 445, y: 445},
     size: 50,
@@ -39,7 +18,17 @@ var link = new_link({
     nodeB: nodeB
 });
 
-nodeA.draw();
-nodeB.draw();
-link.draw();
+//nodeA.draw();
+//nodeB.draw();
+//link.draw();
 
+var Universe = new_universe();
+
+Universe.add(nodeA);
+Universe.add(nodeB);
+Universe.add(link);
+
+Universe.render();
+
+
+bind_controls({Universe: Universe});
