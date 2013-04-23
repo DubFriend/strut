@@ -1,34 +1,42 @@
+var Draw = new_draw();
+
+var Physics = new_physics();
+
 var nodeA = new_node({
     position: {x: 445, y: 445},
     size: 50,
     color: COLOR.RED,
-    type: "solid"
+    type: "solid",
+    Draw: Draw
 });
-
 
 var nodeB = new_node({
     position: {x: 600, y: 600},
     size: 15,
     color: COLOR.YELLOW,
-    type: "disc"
+    type: "disc",
+    Draw: Draw
 });
 
 var link = new_link({
     nodeA: nodeA,
-    nodeB: nodeB
+    nodeB: nodeB,
+    Draw: Draw
 });
 
-//nodeA.draw();
-//nodeB.draw();
-//link.draw();
 
-var Universe = new_universe();
+var Universe = new_universe({
+    Draw: Draw,
+    Physics: Physics
+});
 
 Universe.add(nodeA);
 Universe.add(nodeB);
 Universe.add(link);
 
-Universe.render();
 
+var Manager = new_manager({Universe: Universe});
+Manager.start();
 
-bind_controls({Universe: Universe});
+//Universe.render();
+

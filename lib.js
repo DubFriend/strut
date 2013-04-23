@@ -30,7 +30,11 @@ var TWOPI = Math.PI * 2,
     HEIGHT = $('#canvas').height(),
     COLOR = {
         YELLOW: 'rgba(255, 255, 0, 0.7)',
+        YELLOW_BRIGHT: 'rgba(255, 255, 0, 1)',
         BLUE: 'rgba(31, 48, 240, 0.7)',
+        BLUE_BRIGHT: 'rgba(31, 48, 240, 1)',
         RED: 'rgba(233, 15, 15, 0.74)',
-        BLACK: 'rgb(0, 0, 0)'
+        RED_BRIGHT: 'rgba(233, 15, 15, 1)',
+        BLACK: 'rgb(0, 0, 0)',
+        BLACK_BRIGHT: 'rgb(22, 22, 22)'
     };

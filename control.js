@@ -24,84 +24,105 @@ function cursor_position(e) {
 
 
 
-
-
-
-
 var new_universe = function (fig) {
     var fig = fig || {},
+        that = {},
         objects = [],
-        Render = fig.Draw || Draw;
-
-    return {
-        add: function (object) {
-            objects.push(object);
-        },
-        remove: function (object) {
-            var i;
-            for(i = 0; i < objects.length; i += 1) {
-                if(objects[i] === object) {
-                    objects.splice(i, 1);
-                    return true;
-                }
-            }
-            return false;
-        },
-        render: function () {
-            var i;
-            Render.clear();
-            Physics.apply(objects);
-            for(i = 0; i < objects.length; i += 1) {
-                objects[i].draw();
-            }
-        },
-        get_intersecting_object: function (position) {
-            var i;
-            for(i = 0; i < objects.length; i += 1) {
-                if(objects[i].intersect && objects[i].intersect(position)) {
-                    return objects[i];
-                }
-            }
-        }
-    };
-};
-
-
-var bind_controls = function (fig) {
-    var fig = fig || {},
+        Draw = fig.Draw,
+        Physics = fig.Physics
+        isMouseDown = false,
         $canvas = fig.canvas || $('#canvas'),
-        Universe = fig.Universe,
-        isMouseDown = false;
+        grabbedObject = null;
+
 
     $canvas.mousedown(function (e) {
-        var object = Universe.get_intersecting_object(cursor_position(e));
+        grabbedObject = that.get_intersecting_object(cursor_position(e));
+        that.remove(grabbedObject);
         isMouseDown = true;
-        if(object) {
-            alert("object clicked");
-        }
     });
 
     $canvas.mouseup(function (e) {
+        if(grabbedObject) {
+            that.add(grabbedObject);
+        }
+        grabbedObject = null;
         isMouseDown = false;
     });
 
     $canvas.mousemove(function (e) {
-        $('#cursor').html(JSON.stringify(cursor_position(e)));
+        var newPosition;
+        if(isMouseDown && grabbedObject) {
+            newPosition = cursor_position(e);
+            grabbedObject.velocity = {
+                x: grabbedObject.position.x - newPosition.x,
+                y: grabbedObject.position.y - newPosition.y
+            };
+            grabbedObject.position = newPosition;
+        }
     });
-};
 
+    
+    that.add = function (object) {
+        objects.push(object);
+    };
+
+    that.remove = function (object) {
+        var i;
+        for(i = 0; i < objects.length; i += 1) {
+            if(objects[i] === object) {
+                objects.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    };
+
+    that.render =  function () {
+        var i;
+        Draw.clear();
+        for(i = 0; i < objects.length; i += 1) {
+            objects[i].draw();
+        }
+        if(grabbedObject) {
+            grabbedObject.draw({type: "bright"});
+        }
+    };
+
+    that.get_intersecting_object = function (position) {
+        var i;
+        for(i = 0; i < objects.length; i += 1) {
+            if(objects[i].intersect && objects[i].intersect(position)) {
+                return objects[i];
+            }
+        }
+    };
+
+    that.apply_physics = function () {
+        var i;
+        for(i = 0; i < objects.length; i += 1) {
+            Physics.momentum(objects);
+            //objects[i].momentum();
+        }
+    };
+
+    return that;
+};
 
 
 //manages game processing.
 var new_manager = function (fig) {
 
     var intervalId,
-        isActive = false;
+        isActive = false,
+        Universe = fig.Universe;
 
     return {
         start: function () {
             if(!isActive) {
-                intervalId = setInterval(function(){}, 16);
+                intervalId = setInterval(function(){
+                    Universe.apply_physics();
+                    Universe.render();
+                }, 16);
                 isActive = true;
             }
         },

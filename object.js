@@ -1,9 +1,10 @@
 
 var new_object = function (fig, my) {
-    my.Draw = fig.Draw || Draw;
+    my.Draw = fig.Draw;
     return {
         color: fig.color || COLOR.BLUE,
         position: fig.position,
+        velocity: fig.velocity || {x: 0, y: 0},
         width: fig.width || 2,
         draw: function () { throw("override me"); }
     };
@@ -31,19 +32,25 @@ var new_node = function (fig, my) {
         return distance(position, this.position) < this.size;
     };
 
-    that.draw = function () {
+    that.draw = function (fig) {
+        var fig = fig || {},
+            color = this.color;
+        if(fig.type === "bright") {
+            color = my.Draw.brighten_color(color);
+        }
+
         if(this.type === "solid") {
             my.Draw.circle({
                 position: this.position,
                 size: this.size,
-                color: this.color
+                color: color
             });
         }
         else if(this.type === "disc") {
             my.Draw.disc({
                 position: this.position,
                 size: this.size,
-                color: this.color,
+                color: color,
                 width: this.width
             });
         }

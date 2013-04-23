@@ -1,4 +1,4 @@
-var Draw = (function () {
+var new_draw = function () {
 
     var ctx = $('#canvas')[0].getContext("2d");
     
@@ -29,7 +29,16 @@ var Draw = (function () {
             ctx.lineTo(fig.end.x, fig.end.y);
             ctx.closePath();
             ctx.stroke();
+        },
+        brighten_color: function (color) {
+            var i;
+            for(i in COLOR) {
+                if(color == COLOR[i]) {
+                    return COLOR[i + "_BRIGHT"];
+                }
+            }
+            throw("invalid color");
         }
     };
 
-}());
+};
