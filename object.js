@@ -17,6 +17,9 @@ var new_node = function (fig, my) {
         that = new_object(fig, my),
         distance = function (posA, posB) {
             return Math.sqrt(Math.pow(posA.x - posB.x, 2) + Math.pow(posA.y - posB.y, 2));
+        },
+        set_direction = function(pos, vel, max) {
+            return ((pos < 0 && vel < 0) || (pos > max && vel > 0)) ? -1 : 1;
         };
 
     that.size = fig.size || 15;
@@ -30,6 +33,13 @@ var new_node = function (fig, my) {
 
     that.intersect = function (position) {
         return distance(position, this.position) < this.size;
+    };
+
+    that.momentum = function () {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.velocity.x *= set_direction(this.position.x, this.velocity.x, WIDTH);
+        this.velocity.y *= set_direction(this.position.y, this.velocity.y, HEIGHT);
     };
 
     that.draw = function (fig) {

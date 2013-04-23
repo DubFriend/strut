@@ -54,8 +54,8 @@ var new_universe = function (fig) {
         if(isMouseDown && grabbedObject) {
             newPosition = cursor_position(e);
             grabbedObject.velocity = {
-                x: grabbedObject.position.x - newPosition.x,
-                y: grabbedObject.position.y - newPosition.y
+                x: (newPosition.x - grabbedObject.position.x) * 0.2,
+                y: (newPosition.y - grabbedObject.position.y) * 0.2
             };
             grabbedObject.position = newPosition;
         }
@@ -77,17 +77,6 @@ var new_universe = function (fig) {
         return false;
     };
 
-    that.render =  function () {
-        var i;
-        Draw.clear();
-        for(i = 0; i < objects.length; i += 1) {
-            objects[i].draw();
-        }
-        if(grabbedObject) {
-            grabbedObject.draw({type: "bright"});
-        }
-    };
-
     that.get_intersecting_object = function (position) {
         var i;
         for(i = 0; i < objects.length; i += 1) {
@@ -101,7 +90,17 @@ var new_universe = function (fig) {
         var i;
         for(i = 0; i < objects.length; i += 1) {
             Physics.momentum(objects);
-            //objects[i].momentum();
+        }
+    };
+
+    that.render =  function () {
+        var i;
+        Draw.clear();
+        for(i = 0; i < objects.length; i += 1) {
+            objects[i].draw();
+        }
+        if(grabbedObject) {
+            grabbedObject.draw({type: "bright"});
         }
     };
 
